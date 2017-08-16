@@ -1,0 +1,15 @@
+#!/bin/bash
+
+while IFS='' read -r line || [[ -n "$line" ]]; do
+	if echo $line | grep "^#"; then
+		:
+	else
+		url=`echo "$line" | cut -d$'\t' -f1`
+		flags=`echo "$line" | cut -d$'\t' -f2`
+		location=`echo "$line" | cut -d$'\t' -f3`
+		echo $url $flags $location
+		mkdir -p $location
+		cd $location
+		youtube-dl $flags --download-archive archive.txt "$url"
+	fi
+done < "$1"
